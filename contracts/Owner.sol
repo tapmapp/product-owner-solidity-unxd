@@ -6,9 +6,42 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract LuxOwn is ERC721, ERC721Burnable, Ownable {
-    constructor() ERC721("LuxOwn", "LXO") {}
+    uint256 brandId;
+    uint256 productReference;
+    uint256 productIdentifier;
 
-    function safeMint(address to, uint256 productIdentifier) public onlyOwner {
-        _safeMint(to, productIdentifier);
+    event nftDeployed(
+        uint256 brandId,
+        uint256 productReference,
+        uint256 productIdentifier
+    );
+    event nftMinted(
+        address to,
+        uint256 brandId,
+        uint256 productReference,
+        uint256 productIdentifier
+    );
+
+    constructor(
+        uint256 _brandId,
+        uint256 _productReference,
+        uint256 _productIdentifier
+    ) ERC721("LuxOwn", "LXO") {
+        brandId = _brandId;
+        productReference = _productReference;
+        productIdentifier = _productIdentifier;
+
+        emit nftDeployed(brandId, productReference, productIdentifier);
+    }
+
+    function safeMint(
+        address _to,
+        uint256 _brandId,
+        uint256 _productReference,
+        uint256 _productIdentifier
+    ) public onlyOwner {
+        _safeMint(_to, productIdentifier);
+
+        emit nftMinted(_to, _brandId, _productReference, _productIdentifier);
     }
 }
