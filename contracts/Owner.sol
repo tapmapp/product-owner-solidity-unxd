@@ -15,6 +15,7 @@ contract LuxOwn is ERC721, ERC721Burnable, Ownable {
         uint256 productReference,
         uint256 productIdentifier
     );
+
     event nftMinted(
         address to,
         uint256 brandId,
