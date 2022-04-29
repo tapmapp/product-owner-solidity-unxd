@@ -2,47 +2,33 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract LuxOwn is ERC721, ERC721Burnable, Ownable {
-    uint256 brandId;
-    uint256 productReference;
-    uint256 productIdentifier;
+contract LuxOwn is ERC721, Ownable {
+    uint256 public tokenIds = 0;
 
-    event nftDeployed(
-        uint256 brandId,
-        uint256 productReference,
-        uint256 productIdentifier
-    );
-    
-    event nftMinted(
-        address to,
-        uint256 brandId,
-        uint256 productReference,
-        uint256 productIdentifier
-    );
+    constructor(string memory _productReference)
+        ERC721(_productReference, _productReference)
+    {}
 
-    constructor(
-        uint256 _brandId,
-        uint256 _productReference,
-        uint256 _productIdentifier
-    ) ERC721("LuxOwn", "LXO") {
-        brandId = _brandId;
-        productReference = _productReference;
-        productIdentifier = _productIdentifier;
-
-        emit nftDeployed(brandId, productReference, productIdentifier);
+    function createItem(address _to, string memory _productIdentifier)
+        public
+        onlyOwner
+    {
+        _safeMint(_to, tokenIds, bytes(_productIdentifier));
+        tokenIds = tokenIds + 1;
     }
 
-    function safeMint(
-        address _to,
-        uint256 _brandId,
-        uint256 _productReference,
-        uint256 _productIdentifier
-    ) public onlyOwner {
-        _safeMint(_to, productIdentifier);
+    function getItemOwner(uint256 _tokenId) public view returns (address) {
+        return ownerOf(_tokenId);
+    }
 
-        emit nftMinted(_to, _brandId, _productReference, _productIdentifier);
+    function transferItemOwner(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    ) public returns (address) {
+        safeTransferFrom(_from, _to, _tokenId);
+        return ownerOf(_tokenId);
     }
 }

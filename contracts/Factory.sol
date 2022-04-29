@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "./Owner.sol";
+import "./OwnerV2.sol";
 
 contract LuxOwnFactory {
-    function createNew(
-        uint256 _brandId,
-        uint256 _productReference,
-        uint256 _productIdentifier
-    ) public {
-        new LuxOwn(_brandId, _productReference, _productIdentifier);
+    function createNew(string memory _productReference)
+        public
+        returns (LuxOwn)
+    {
+        LuxOwn luxown = new LuxOwn(_productReference);
+        return luxown;
     }
 }
